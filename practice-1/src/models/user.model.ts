@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import validator from 'validator';
 
 interface IUser {
   firstName: string;
@@ -16,7 +17,27 @@ const userSchema = new mongoose.Schema<IUser>({
     minlength: [3, 'First name must be 3 character long. got {VALUE}'],
   },
   lastName: { type: String, required: true, trim: true },
-  email: { type: String, required: true, trim: true, unique: true },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+    lowercase: true,
+    // match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'], // Regular Expression (Simple & Common)
+    // validate: { // Custom Validator (More Control)
+    //   validator: function (value: string) {
+    //     // Very basic email regex
+    //     return /^\S+@\S+\.\S+$/.test(value);
+    //   },
+    //   message: 'Please enter a valid email address. got {VALUE}',
+    // },
+
+    validate: {
+      // 3rd party package to validate email
+      validator: (value: string) => validator.isEmail(value),
+      message: 'Please enter a valid email address',
+    },
+  },
   password: {
     type: String,
     required: true,
