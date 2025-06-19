@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import Note from '../models/note';
+import Note from '../models/note.model';
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.post('/create-note', async (req, res) => {
 // ✅ Get all notes
 router.get('/notes', async (req, res) => {
   try {
-    const notes = await Note.find();
+    const notes = await Note.find().populate('user');
     res
       .status(200)
       .json({ status: true, message: 'Note saved successfully!', data: notes });

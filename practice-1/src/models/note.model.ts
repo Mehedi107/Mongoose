@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Types } from 'mongoose';
 
 // schemas
 const noteSchema = new mongoose.Schema(
@@ -12,6 +12,11 @@ const noteSchema = new mongoose.Schema(
     },
     pinned: { type: Boolean, default: false },
     date: { type: Date, default: Date.now },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   { versionKey: false, timestamps: true }
 );
