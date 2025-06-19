@@ -1,12 +1,28 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 
+interface IAddress {
+  city: string;
+  street: string;
+  zip: string;
+}
+
+const addressScheme = new mongoose.Schema<IAddress>(
+  {
+    city: String,
+    street: String,
+    zip: String,
+  },
+  { _id: false }
+);
+
 interface IUser {
   firstName: string;
   lastName: string;
   password: string;
   email: string;
   role: 'user' | 'admin';
+  address: IAddress;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -24,6 +40,7 @@ const userSchema = new mongoose.Schema<IUser>({
     unique: true,
     lowercase: true,
     // match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'], // Regular Expression (Simple & Common)
+
     // validate: { // Custom Validator (More Control)
     //   validator: function (value: string) {
     //     // Very basic email regex
@@ -45,6 +62,7 @@ const userSchema = new mongoose.Schema<IUser>({
     minlength: [8, 'Password length must be at least 8 character'],
   },
   role: { type: String, trim: true, default: 'user' },
+  address: addressScheme,
 });
 
 const User = mongoose.model('User', userSchema);
